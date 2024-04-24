@@ -14,11 +14,17 @@ for j in range (len(interval)):
     mean_list = []
     std_list = []
     for k in range (len(name)):
-        mean = df_return[name[k]].iloc[-wo:].mean() * 12
+        data = df_return[name[k]].iloc[-wo:]
+        mean = data.mean() * 12
         mean_list.append(mean)
-        std = df_return[name[k]].iloc[-wo:].std() * sqrt(12)
+        std = data.std() * sqrt(12)
         std_list.append(std)
     conclu['rrf'] = rf
-    conclu[r_interval[j]] = np.array(mean_list)
-    conclu[std_interval[j]] = np.array(std_list)
-    conclu[interval[j]] = (conclu[r_interval[j]]-conclu['rrf'])/conclu[std_interval[j]]
+    if data.isnull().values.any():
+        conclu[r_interval[j]] = np.nan
+        conclu[std_interval[j]] = np.nan
+        conclu[interval[j]] = np.nan
+    else:
+        conclu[r_interval[j]] = np.array(mean_list)
+        conclu[std_interval[j]] = np.array(std_list)
+        conclu[interval[j]] = (conclu[r_interval[j]]-conclu['rrf'])/conclu[std_interval[j]]
