@@ -17,4 +17,4 @@ for loop in range(3,120):
     result = model.fit()
     newdf['Yhat'] = result.predict(X)
     mae = mean_absolute_error(newdf['Y'],newdf['Yhat'])
-    print(mae)
+    error.append(mae)
