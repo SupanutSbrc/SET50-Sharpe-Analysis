@@ -1,13 +1,18 @@
-import requests
-from bs4 import BeautifulSoup
+from tvDatafeed import TvDatafeed, Interval
 import pandas as pd
-url = 'https://www.thaiwarrant.com/dw/search'
-head = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
+import numpy as np
+from math import sqrt
+import matplotlib.pyplot as plt
 
-print('0')
+tv = TvDatafeed()
+df = tv.get_hist(symbol='SET:SET50', exchange='SET', interval=Interval.in_daily, n_bars=1201)
+set50 = df[['close']]
+set50.rename(columns = {'close':'remove'}, inplace=True)
 
-html = requests.get(url, headers={'User-Agent': head}).content
-df_list = pd.read_html(html)
-df = df_list[2]
-df = df.drop(df.columns[8],axis =1).drop(df.columns[7],axis =1).drop(df.columns[6],axis =1).drop(df.columns[5],axis =1).drop(df.columns[3],axis =1).drop(df.columns[0],axis =1)
-df
+for i in range (df_dw01.shape[0]):
+    df = tv.get_hist(symbol=df['Stock'][i], exchange='SET', interval=Interval.in_daily, n_bars=1201)
+    df = df[['close']]
+    set50 = pd.merge(set50, df, left_index=True, right_index=True, how='outer')
+    set50.rename(columns = {'close':df['Stock'][i]}, inplace=True)
+set50 = set50.drop('remove',axis=1)
+set50
